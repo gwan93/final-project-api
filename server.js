@@ -55,14 +55,15 @@ const { addMultipleWidgetsToList, deleteAllWidgetsFromListID } = list_content_qu
 const { getAllRarities } = rarity_queries(db);
 const { getAllSubcategories } = subcategory_queries(db);
 
-const corsOptions = {
-  origin: 'https://varrockge-gw.herokuapp.com/',
-  optionsSuccessStatus: 200
-}
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: 'https://varrockge-gw.herokuapp.com/',
+//   optionsSuccessStatus: 200
+// }
+// app.use(cors(corsOptions));
 // app.options('*', cors());
 // app.use('/', routes);
 
+app.use(cors());
 
 app.get("/login", (req, res) => {
   res.send("This is the login page");
