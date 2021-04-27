@@ -55,7 +55,6 @@ const { addMultipleWidgetsToList, deleteAllWidgetsFromListID } = list_content_qu
 const { getAllRarities } = rarity_queries(db);
 const { getAllSubcategories } = subcategory_queries(db);
 
-const cors = require('cors');
 const corsOptions = {
   origin: 'https://varrockge-gw.herokuapp.com/',
   optionsSuccessStatus: 200
