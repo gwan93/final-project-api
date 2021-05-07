@@ -18,6 +18,7 @@ const port = process.env.PORT || 3000;
 const stripe = require("stripe")(process.env.STRIPE_SK);
 const { v4: uuid } = require("uuid");
 
+
 const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -182,6 +183,39 @@ app.get("/widgets/:id", (req, res) => {
 app.post("/widgets/checkout", (req, res) => {
   // req.body consists of an array of items to be checked out
   // Create an array of promises to be fed into Promise.all
+  console.log("post checkout req.body", req.body);
+
+  // let status;
+  // const { product, token } = req.body;
+
+  // const customer = await stripe.customers.create({
+  //   email: token.email,
+  //   source: token.id
+  // });
+
+  // const idempotency_key = uuid();
+  // const chargeInfo = {
+  //   amount: product.price * 100,
+  //   currency: "usd",
+  //   customer: customer.id,
+  //   receipt_email: token.email,
+  //   description: `Purchased the ${product.name}`,
+  //   shipping: {
+  //     name: token.card.name,
+  //     address: {
+  //       line1: token.card.address_line1,
+  //       line2: token.card.address_line2,
+  //       city: token.card.address_city,
+  //       country: token.card.address_country,
+  //       postal_code: token.card.address_zip
+  //     }
+  //   }
+  // }
+  // const charge = await stripe.charges.create(chargeInfo, {idempotency_key});
+  // console.log("Charge:", { charge });
+  // status = "success";
+
+
   const postRequestArray = [];
   for (const postRequest of req.body) {
     postRequestArray.push(updateWidgetForSale(postRequest.for_sale_by_owner, postRequest.widgetID))
