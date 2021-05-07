@@ -15,6 +15,8 @@ const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
 const port = process.env.PORT || 3000;
+const stripe = require("stripe")(process.env.STRIPE_SK);
+const { v4: uuid } = require("uuid");
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -243,6 +245,41 @@ app.get('/subcategories', (req, res) => {
   });
 });
 
+app.post('/stripe_add_funds', async (req, res) => {
+  // console.log("Request:", req.body);
+
+  let error;
+  let status;
+  try {
+    const { funds, token } = req.body;
+
+    const customer = await stripe.customers.create({
+      email: token.email,
+      source: token.id
+    });
+
+    const idempotencyKey = uuid();
+    const charge = await stripe.charges.create(
+      {
+        amount: funds * 100,
+        currency: "usd",
+        customer: customer.id,
+        receipt_email: token.email,
+        description: `Added $${funds} USD to account ${customer.email}`
+      },
+      {
+        idempotencyKey
+      }
+    );
+    // console.log("Charge:", { charge });
+    status = "success";
+  } catch (error) {
+    // console.error("Error:", error);
+    status = "failure";
+  }
+
+  res.json({ error, status });
+})
 
 app.listen(port, () => {
   console.log(`Express server listening on http://localhost:${port}`);
